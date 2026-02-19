@@ -60,7 +60,7 @@ export default function Bookmark({ bookmark, onDelete }: BookmarkProps) {
   }
 
   return (
-    <div className="h-fit w-[90%] flex *:bg-slate-50 *:border divide-x divide-slate-200">
+    <div className="h-fit w-[90%] flex *:bg-slate-50 *:border *:shadow-md divide-x divide-slate-200">
       <figure className="relative w-10 h-10 aspect-square rounded-l-full">
         <Image
           src={faviconSrc}
@@ -92,7 +92,7 @@ export default function Bookmark({ bookmark, onDelete }: BookmarkProps) {
         </div>
       </div>
 
-      <div className="flex flex-col divide-y divide-slate-200 border-none">
+      <div className="grid divide-y divide-slate-200 border-none">
         <ModalProvider modalContent={<EditBookmarkForm bookmark={bookmark} />}>
           <ButtonOpenModal
             buttonType="custom"
