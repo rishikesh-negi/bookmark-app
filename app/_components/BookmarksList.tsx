@@ -1,8 +1,10 @@
 "use client";
 
 import { FetchedBookmark } from "@/types/global.types";
-import { useOptimistic } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useOptimistic } from "react";
 import { deleteBookmark } from "../_lib/actions";
+import { supabase } from "../_lib/supabase";
 import AddBookmarkForm from "./AddBookmarkForm";
 import Bookmark from "./Bookmark";
 import ButtonOpenModal from "./ui/ButtonOpenModal";
@@ -18,11 +20,32 @@ export default function BookmarksList({
     (currentBookmarks, bookmarkId) =>
       currentBookmarks.filter((bookmark) => bookmark.id !== bookmarkId),
   );
+  const router = useRouter();
 
   async function handleDelete(bookmarkId: number) {
     optimisticDelete(bookmarkId);
     await deleteBookmark(bookmarkId);
   }
+
+  useEffect(() => {
+    const channel = supabase.channel("bookmark-updates");
+
+    channel
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "bookmarks",
+        },
+        () => router.refresh(),
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [router]);
 
   return bookmarks.length > 0 ? (
     <div className="flex flex-col gap-8">
@@ -30,7 +53,7 @@ export default function BookmarksList({
         <ButtonOpenModal buttonType="primary" label="Add a bookmark" />
       </ModalProvider>
       <h2 className="text-2xl font-semibold">Your bookmarks:</h2>
-      <ul className="flex-1 w-260 max-h-[70%] space-y-6 overflow-y-scroll custom-scrollbar">
+      <ul className="flex-1 w-260 max-h-[75%] space-y-6 overflow-y-scroll custom-scrollbar pb-2">
         {optimisticBookmarks.map((bookmark) => (
           <li key={bookmark.id}>
             <Bookmark bookmark={bookmark} onDelete={handleDelete} />
