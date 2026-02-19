@@ -24,6 +24,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "proxy.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",

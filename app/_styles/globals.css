@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+}
+
+@theme {
+  --color-brand-50: #c5daf0;
+  --color-brand-100: #9dc4ea;
+  --color-brand-200: #82b2e2;
+  --color-brand-300: #589de2;
+  --color-brand-400: #377fc7;
+  --color-brand-500: #2e659c;
+  --color-brand-600: #20568d;
+  --color-brand-700: #183f66;
+  --color-brand-800: #15324f;
+  --color-brand-900: #0d2844;
+  --color-brand-950: #0a1f34;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--color-slate-100);
+  --color-foreground: var(--color-slate-800);
+  --font-sans: var(--font-poppins);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--color-slate-100);
+  color: var(--color-slate-800);
+}
+
+@layer components {
+  .spinner {
+    margin: 3.2rem auto 1.6rem;
+    width: 60px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid var(--color-brand-600);
+    border-right-color: var(--color-brand-50);
+    animation: rotate 1s infinite linear;
+  }
+
+  .spinner-mini {
+    margin: 0;
+    width: 20px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid var(--color-slate-700);
+    border-right-color: transparent;
+    animation: rotate 1s infinite linear;
+  }
+
+  .custom-scrollbar {
+    @apply [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar]:h-full [&::-webkit-scrollbar-thumb]:bg-brand-600 [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-thumb]:transition-colors [&::-webkit-scrollbar-thumb]:duration-100 [&::-webkit-scrollbar-thumb:hover]:bg-brand-800 [&::-webkit-scrollbar-thumb:hover]:cursor-pointer [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-button]:hidden;
+  }
+
+  @keyframes rotate {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+}

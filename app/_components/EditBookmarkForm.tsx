@@ -1,0 +1,124 @@
+"use client";
+
+import { type FetchedBookmark } from "@/types/global.types";
+import {
+  type ComponentPropsWithoutRef,
+  type MouseEventHandler,
+  useActionState,
+  useRef,
+  useState,
+} from "react";
+import toast from "react-hot-toast";
+import {
+  editBookmarkAction,
+  type EditBookmarkFormState,
+} from "../_lib/actions";
+import AppToast from "./ui/AppToast";
+import ButtonCloseModal from "./ui/ButtonCloseModal";
+import Input from "./ui/Input";
+import { useModal } from "./ui/Modal";
+import SubmitActionButton from "./ui/SubmitActionButton";
+
+type EditBookmarkFormProps = ComponentPropsWithoutRef<"form"> & {
+  bookmark: FetchedBookmark;
+};
+
+export default function EditBookmarkForm({
+  bookmark,
+  ...props
+}: EditBookmarkFormProps) {
+  const { setModalIsOpen } = useModal();
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const initialState: EditBookmarkFormState = {
+    status: "idle",
+    bookmark,
+  };
+
+  const [state, formAction, isPending] = useActionState(
+    async (prevState: EditBookmarkFormState, formData: FormData) => {
+      const { status, message, bookmark } = await editBookmarkAction(
+        prevState,
+        formData,
+      );
+
+      if (status === "success") {
+        toast.custom(
+          (t) => (
+            <AppToast
+              isVisible={t.visible}
+              type="success"
+              message={message || "Bookmark successfully edited"}
+              toastId={t.id}
+            />
+          ),
+          { duration: 5000 },
+        );
+        setModalIsOpen(false);
+        return { status, message, bookmark };
+      }
+
+      if (status === "fail") {
+        toast.custom(
+          (t) => (
+            <AppToast
+              isVisible={t.visible}
+              type="fail"
+              message={message!}
+              toastId={t.id}
+            />
+          ),
+          { duration: 5000 },
+        );
+      }
+
+      if (status === "error") setFormError(message || "Something went wrong!");
+
+      return { status, message, bookmark };
+    },
+    initialState,
+  );
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleCloseFormModal: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    formRef.current?.reset();
+    setModalIsOpen(false);
+  };
+
+  return (
+    <form
+      action={formAction}
+      ref={formRef}
+      className="min-w-lg flex flex-col gap-4 items-center mt-6"
+      {...props}>
+      <ButtonCloseModal onClick={handleCloseFormModal} />
+      <Input
+        type="text"
+        id="title"
+        name="title"
+        defaultValue={bookmark.title}
+        max={80}
+        min={2}
+        label="Title"
+        className="px-4 py-2 rounded-sm bg-slate-300 w-full"
+      />
+
+      <Input
+        type="url"
+        id="url"
+        name="url"
+        defaultValue={bookmark.url}
+        label="URL"
+        className="px-4 py-2 rounded-sm bg-slate-300 w-full"
+      />
+      <div className="w-full flex items-center gap-4 mt-4">
+        <SubmitActionButton isPending={isPending} buttonText="Add bookmark">
+          Edit bookmark
+        </SubmitActionButton>
+        {formError && <span className="text-sm text-red-700">{formError}</span>}
+      </div>
+    </form>
+  );
+}
