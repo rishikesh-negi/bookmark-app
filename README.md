@@ -27,7 +27,7 @@ bookmarks: {
 - A .env.local file in the project's root folder containing the following
   environment variables:
 
-```json
+```bash
 SUPABASE_URL=<Your Supabase project URL>
 SUPABASE_KEY=<Your Supabase publishable public key>
 
