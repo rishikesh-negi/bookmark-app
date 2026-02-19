@@ -29,14 +29,17 @@ bookmarks: {
 
 ```bash
 SUPABASE_URL=<Your Supabase project URL>
-SUPABASE_KEY=<Your Supabase publishable public key>
+SUPABASE_KEY=<Your Supabase project's publishable public key>
 
-NEXTAUTH_URL=http://localhost:3000 (to be changed to the URL of hte deployed project on Vercel)
+NEXTAUTH_URL=http://localhost:3000 (to be changed to the URL of the deployed project on Vercel)
 NEXTAUTH_SECRET=<Any secure string that can serve as a secret>
 
 AUTH_GOOGLE_ID=<Your Google Dev Console project client ID>
 AUTH_GOOGLE_SECRET=<Your Google Dev Console project client secret>
 ```
+
+- A Google Developer Console project with correct configurations to use Google
+  as the auth provider
 
 - Install all the packages by running the following command in the project root
   directory:
