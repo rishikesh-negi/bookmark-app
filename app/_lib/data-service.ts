@@ -14,6 +14,8 @@ export async function getUser(email: string): Promise<AppUser> {
 }
 
 export async function getBookmark(id: number): Promise<FetchedBookmark> {
+  "use cache";
+
   const { data, error } = await supabase
     .from("bookmarks")
     .select("*")
@@ -25,6 +27,8 @@ export async function getBookmark(id: number): Promise<FetchedBookmark> {
 }
 
 export async function getBookmarks(userId: number): Promise<FetchedBookmark[]> {
+  "use cache";
+
   const { data, error } = await supabase
     .from("bookmarks")
     .select("*")
