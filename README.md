@@ -29,7 +29,7 @@ bookmarks: {
 
 ```bash
 SUPABASE_URL=<Your Supabase project URL>
-SUPABASE_KEY=<Your Supabase project's publishable public key>
+SUPABASE_PUBLISHABLE_KEY=<Your Supabase project's publishable public key>
 
 NEXTAUTH_URL=http://localhost:3000 (to be changed to the URL of the deployed project on Vercel)
 NEXTAUTH_SECRET=<Any secure string that can serve as a secret>
