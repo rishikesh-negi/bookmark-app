@@ -1,7 +1,7 @@
+import { createUser, getUser } from "@/app/_lib/data-service";
 import NextAuth, { type Session } from "next-auth";
 import { AdapterSession, AdapterUser } from "next-auth/adapters";
 import Google from "next-auth/providers/google";
-import { createUser, getUser } from "@/app/_lib/data-service";
 
 export type SessionWithUserId =
   | ({ user: AdapterUser & { userId: number } } & AdapterSession & Session)

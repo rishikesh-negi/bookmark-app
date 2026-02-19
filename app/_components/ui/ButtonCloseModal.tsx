@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, MouseEventHandler } from "react";
+import { ComponentPropsWithoutRef, MouseEventHandler } from "react";
 
 type ButtonCloseModalProps = ComponentPropsWithoutRef<"button"> & {
   onClickFn?: MouseEventHandler<HTMLButtonElement>;

@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-import logo from "@/public/logo.png";
 import icon from "@/public/favicon.png";
+import logo from "@/public/logo.png";
 import HeroCta from "./_components/HeroCta";
 
 export default function Home() {

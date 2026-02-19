@@ -1,6 +1,5 @@
 import { supabase } from "@/app/_lib/supabase";
 import { AppUser, FetchedBookmark } from "@/types/global.types";
-import isURL from "validator/lib/isURL";
 
 export async function getUser(email: string): Promise<AppUser> {
   const { data } = await supabase
@@ -48,5 +47,3 @@ export async function createUser(newUser: AppUser): Promise<AppUser> {
   }
   return data;
 }
-
-// export async function deleteBookmark(id) {}

@@ -1,10 +1,10 @@
-import { use } from "react";
 import { auth } from "@/app/_lib/auth";
 import Image from "next/image";
+import { use } from "react";
 
-import logo from "@/public/logo.png";
 import Button from "@/app/_components/ui/Button";
 import UserProfileInfo from "@/app/_components/UserProfileInfo";
+import logo from "@/public/logo.png";
 
 export const metadata = {
   title: "Account",

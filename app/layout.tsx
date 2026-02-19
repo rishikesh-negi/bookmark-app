@@ -1,9 +1,9 @@
 import "@/app/_styles/globals.css";
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
-import Header from "./_components/Header";
 import { SessionProvider } from "next-auth/react";
+import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import Header from "./_components/Header";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
