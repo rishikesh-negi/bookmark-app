@@ -1,5 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with
-[`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+An application to manage bookmarks across different browsers and devices, built
+using Next.js, Supabase, and Tailwind CSS. Employs Auth.js for authentication
+with Google sign-in.
 
 Application link: [Bookmark App](https://getmybookmarks.vercel.app).
 
