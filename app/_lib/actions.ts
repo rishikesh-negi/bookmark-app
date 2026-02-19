@@ -3,7 +3,7 @@
 import { auth, SessionWithUserId, signIn, signOut } from "@/app/_lib/auth";
 import { supabase } from "@/app/_lib/supabase";
 import { FetchedBookmark } from "@/types/global.types";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import validator from "validator";
 import { getBookmark } from "./data-service";
@@ -63,6 +63,7 @@ export async function createBookmarkAction(
     .insert([{ title, url, user: session.user.userId }]);
   if (error) return { status: "fail", message: "Failed to create bookmark" };
 
+  revalidateTag(`${session.user.userId}-bookmarks`, "max");
   revalidatePath("/account/bookmarks");
   return { status: "success", message: "Bookmark successfully added!" };
 }
@@ -71,7 +72,7 @@ export async function editBookmarkAction(
   prevState: EditBookmarkFormState,
   formData: FormData,
 ): Promise<EditBookmarkFormState> {
-  const session = await auth();
+  const session = (await auth()) as SessionWithUserId;
 
   if (!session?.user)
     return {
@@ -118,6 +119,7 @@ export async function editBookmarkAction(
       bookmark: prevState.bookmark,
     };
 
+  revalidateTag(`${session.user.userId}-bookmarks`, "max");
   revalidatePath("/account/bookmarks");
   return redirect("/account/bookmarks");
 }
@@ -135,5 +137,6 @@ export async function deleteBookmark(id: number) {
   const { error } = await supabase.from("bookmarks").delete().eq("id", id);
   if (error) throw new Error("Bookmark could not be deleted");
 
+  revalidateTag(`${session.user.userId}-bookmarks`, "max");
   revalidatePath("/account/bookmarks");
 }
