@@ -30,8 +30,8 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${poppins.variable} antialiased bg-slate-100 text-slate-800 min-h-dvh flex flex-col font-sans`}>
-        <div id="modal-root"></div>
         <SessionProvider refetchOnWindowFocus={true} refetchInterval={0}>
+          <div id="modal-root"></div>
           <Header />
 
           <div className="flex-1 px-8 py-12 grid">
