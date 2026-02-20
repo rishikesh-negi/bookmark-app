@@ -31,16 +31,16 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} antialiased bg-slate-100 text-slate-800 min-h-dvh flex flex-col font-sans`}>
         <div id="modal-root"></div>
-        <Header />
+        <SessionProvider refetchOnWindowFocus={true} refetchInterval={0}>
+          <Header />
 
-        <div className="flex-1 px-8 py-12 grid">
-          <main className="max-w-7xl mx-auto w-full">
-            <SessionProvider refetchOnWindowFocus={true} refetchInterval={0}>
+          <div className="flex-1 px-8 py-12 grid">
+            <main className="max-w-7xl mx-auto w-full">
               {children}
-            </SessionProvider>
-            <Toaster />
-          </main>
-        </div>
+              <Toaster />
+            </main>
+          </div>
+        </SessionProvider>
       </body>
     </html>
   );
