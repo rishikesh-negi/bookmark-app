@@ -26,8 +26,8 @@ const urlValidationOptions = {
   allow_protocol_relative_urls: false,
 };
 
-export async function signInAction(redirectTo: string = "/account/profile") {
-  await signIn("google", { redirectTo });
+export async function signInAction() {
+  await signIn("google", { redirectTo: "/" });
 }
 
 export async function signOutAction() {
