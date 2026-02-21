@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import CrossTabSessionSync from "./_components/CrossTabSessionSync";
 import Header from "./_components/Header";
+import SessionStatusBroadcaster from "./_components/SessionStatusBroadcaster";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -23,24 +25,26 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
         className={`${poppins.variable} antialiased bg-slate-100 text-slate-800 min-h-dvh flex flex-col font-sans`}>
-        <SessionProvider refetchOnWindowFocus={true} refetchInterval={0}>
-          <div id="modal-root"></div>
-          <Header />
-
-          <div className="flex-1 px-8 py-12 grid">
-            <main className="max-w-7xl mx-auto w-full">
-              {children}
-              <Toaster />
-            </main>
-          </div>
+        <SessionProvider>
+          <SessionStatusBroadcaster />
+          <CrossTabSessionSync />
         </SessionProvider>
+        <div id="modal-root"></div>
+        <Header />
+
+        <div className="flex-1 px-8 py-12 grid">
+          <main className="max-w-7xl mx-auto w-full">
+            {children}
+            <Toaster />
+          </main>
+        </div>
       </body>
     </html>
   );
