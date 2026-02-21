@@ -2,7 +2,6 @@
 
 import { BookmarkFilled, UserAvatarFilled } from "@carbon/icons-react";
 
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SignOutButton from "./SignOutButton";
@@ -22,15 +21,11 @@ const navLinks = [
 
 export default function SideNavigation() {
   const pathname = usePathname();
-  const { data: session } = useSession();
-  const renderNavLinks = session?.user
-    ? navLinks
-    : navLinks.filter((link) => link.href === "/account/bookmarks");
 
   return (
     <nav className="border-r border-slate-200">
       <ul className="flex flex-col gap-2 h-full text-lg">
-        {renderNavLinks.map((link) => (
+        {navLinks.map((link) => (
           <li key={link.name}>
             <Link
               className={`px-5 py-3 flex items-center gap-4 font-semibold text-slate-800 hover:bg-brand-200/40 transition-colors ${pathname === link.href && "bg-brand-200/40"}`}
