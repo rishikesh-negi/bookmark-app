@@ -9,6 +9,7 @@ import {
 } from "react";
 import toast from "react-hot-toast";
 import { createBookmarkAction, type FormState } from "../_lib/actions";
+import { APP_TOAST_ID } from "../_lib/helpers";
 import AppToast from "./ui/AppToast";
 import ButtonCloseModal from "./ui/ButtonCloseModal";
 import Input from "./ui/Input";
@@ -41,7 +42,7 @@ export default function AddBookmarkForm(props: AddBookmarkFormProps) {
               toastId={t.id}
             />
           ),
-          { duration: 5000 },
+          { duration: 5000, id: APP_TOAST_ID },
         );
       }
 
@@ -55,7 +56,7 @@ export default function AddBookmarkForm(props: AddBookmarkFormProps) {
               toastId={t.id}
             />
           ),
-          { duration: 5000 },
+          { duration: 5000, id: APP_TOAST_ID },
         );
       }
 

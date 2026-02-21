@@ -13,6 +13,7 @@ import {
   editBookmarkAction,
   type EditBookmarkFormState,
 } from "../_lib/actions";
+import { APP_TOAST_ID } from "../_lib/helpers";
 import AppToast from "./ui/AppToast";
 import ButtonCloseModal from "./ui/ButtonCloseModal";
 import Input from "./ui/Input";
@@ -52,7 +53,7 @@ export default function EditBookmarkForm({
               toastId={t.id}
             />
           ),
-          { duration: 5000 },
+          { duration: 5000, id: APP_TOAST_ID },
         );
         setModalIsOpen(false);
         return { status, message, bookmark };
@@ -68,7 +69,7 @@ export default function EditBookmarkForm({
               toastId={t.id}
             />
           ),
-          { duration: 5000 },
+          { duration: 5000, id: APP_TOAST_ID },
         );
       }
 

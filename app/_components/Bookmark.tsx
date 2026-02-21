@@ -4,6 +4,7 @@ import { Copy, Edit, Launch, TrashCan } from "@carbon/icons-react";
 import Image, { StaticImageData } from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { APP_TOAST_ID } from "../_lib/helpers";
 import EditBookmarkForm from "./EditBookmarkForm";
 import AppToast from "./ui/AppToast";
 import BookmarkActionButton from "./ui/BookmarkActionButton";
@@ -36,7 +37,7 @@ export default function Bookmark({ bookmark, onDelete }: BookmarkProps) {
             toastId={t.id}
           />
         ),
-        { duration: 500 },
+        { duration: 500, id: APP_TOAST_ID },
       );
     } catch (err) {
       console.error(err);
@@ -49,7 +50,7 @@ export default function Bookmark({ bookmark, onDelete }: BookmarkProps) {
             toastId={t.id}
           />
         ),
-        { duration: 500 },
+        { duration: 500, id: APP_TOAST_ID },
       );
     }
   }
