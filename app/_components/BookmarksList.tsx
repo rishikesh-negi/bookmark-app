@@ -1,10 +1,8 @@
 "use client";
 
 import { FetchedBookmark } from "@/types/global.types";
-import { useRouter } from "next/navigation";
-import { useEffect, useOptimistic } from "react";
+import { useOptimistic } from "react";
 import { deleteBookmark } from "../_lib/actions";
-import { supabase } from "../_lib/supabase";
 import AddBookmarkForm from "./AddBookmarkForm";
 import Bookmark from "./Bookmark";
 import ButtonOpenModal from "./ui/ButtonOpenModal";
@@ -20,32 +18,11 @@ export default function BookmarksList({
     (currentBookmarks, bookmarkId) =>
       currentBookmarks.filter((bookmark) => bookmark.id !== bookmarkId),
   );
-  const router = useRouter();
 
   async function handleDelete(bookmarkId: number) {
     optimisticDelete(bookmarkId);
     await deleteBookmark(bookmarkId);
   }
-
-  useEffect(() => {
-    const channel = supabase.channel("bookmark-updates");
-
-    channel
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "bookmarks",
-        },
-        () => router.refresh(),
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [router]);
 
   return bookmarks.length > 0 ? (
     <div className="flex flex-col gap-8">
