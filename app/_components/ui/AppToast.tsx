@@ -1,6 +1,4 @@
 import { CheckmarkFilled, CloseFilled } from "@carbon/icons-react";
-import { redirect } from "next/navigation";
-import { MouseEventHandler } from "react";
 import toast from "react-hot-toast";
 
 type BookmarkCreatedToastProps = {
@@ -14,14 +12,8 @@ type BookmarkCreatedToastProps = {
 export default function AppToast({
   type = "success",
   message,
-  redirectPath,
   toastId,
 }: BookmarkCreatedToastProps) {
-  const handleCloseModal: MouseEventHandler<HTMLButtonElement> = () => {
-    if (redirectPath !== undefined) redirect(redirectPath);
-    toast.dismiss(toastId);
-  };
-
   const icon =
     type === "success" ? (
       <CheckmarkFilled size={20} className="text-green-500" />
@@ -36,7 +28,7 @@ export default function AppToast({
       <p>{message}</p>
       <div className="h-full pl-3 flex items-center justify-center border-l border-brand-600">
         <button
-          onClick={handleCloseModal}
+          onClick={() => toast.dismiss(toastId)}
           className="w-4 h-4 border-brand-600 flex items-center justify-center rounded-full bg-brand-100 cursor-pointer">
           <span className="text-brand-700 text-xl">&times;</span>
         </button>
