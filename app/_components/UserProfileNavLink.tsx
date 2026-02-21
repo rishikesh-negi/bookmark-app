@@ -1,13 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
-import { use } from "react";
 import { auth } from "../_lib/auth";
 import Button from "./ui/Button";
+import { use } from "react";
 
 export default function UserProfileNavLink() {
   const session = use(auth());
 
-  return session?.user ? (
+  if (!session)
+    return (
+      <Button href="/account" textOnly>
+        Log in/Sign up
+      </Button>
+    );
+
+  return (
     <Link
       href="/account/profile"
       className="flex items-center gap-2 text-lg text-brand-700 hover:text-brand-600 transition-colors">
@@ -19,11 +26,7 @@ export default function UserProfileNavLink() {
         alt="User's avatar"
         referrerPolicy="no-referrer"
       />
-      <span>{session?.user?.name}</span>
+      <span>{session.user!.name}</span>
     </Link>
-  ) : (
-    <Button href="/login" textOnly>
-      Log in/Sign up
-    </Button>
   );
 }
