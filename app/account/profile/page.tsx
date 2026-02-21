@@ -5,13 +5,16 @@ import { use } from "react";
 import Button from "@/app/_components/ui/Button";
 import UserProfileInfo from "@/app/_components/UserProfileInfo";
 import logo from "@/public/logo.png";
+import { redirect } from "next/navigation";
+import { type Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Account",
 };
 
 export default function Page() {
   const session = use(auth());
+  if (!session) return redirect("/login");
   const firstName = session?.user?.name?.split(" ")[0];
 
   return (
