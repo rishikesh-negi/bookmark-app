@@ -90,21 +90,21 @@ searching and learning, it became achievable.
 
 ### Setting Up Google sign-in Using Auth.js:
 
-Auth.js was a no-brainer choice for setting up authentication via Google
+Auth.js was a no-brainer choice for implementing authentication with Google
 sign-in. However, because Auth.js was previously known as NextAuth, then
-acquired by BetterAuth, it has different versions of documentation. Figuring out
-the ideal version to use and the documentation to refer was messy. Learning
-about how to use Google Developer Console to set a client for Google sign-in was
-another challenge. But I was able to figure everything out by reading about how
-to set up a NextAuth/BetterAuth authentication flow.
+acquired by BetterAuth, who turned it into Auth.js, it has different versions of
+documentation. Figuring out the ideal version to use and the documentation to
+refer was messy. Learning about how to use Google Developer Console to create an
+auth provider client for Google sign-in was another challenge. But I was able to
+figure everything out by reading about how to set up a NextAuth/BetterAuth
+authentication flow with Google.
 
 ### Flexible Components:
 
-Building flexible components with the required props combinations was
-challenging with TypeScript involved. I used discriminated unions with type
-narrowing to implement truly flexible components. Example: A button component
-that can either be a <button> or a Next.js <Link /> component depending on the
-passed props.
+Building flexible components with the required props combinations with
+TypeScript was challenging. I used discriminated unions with type narrowing to
+implement truly flexible components. Example: A button component that can either
+be a <button> or a Next.js <Link /> component depending on the passed props.
 
 ### Forms in Modals:
 
@@ -114,3 +114,24 @@ the body only when it is opened and to remove the modal from the DOM when the
 page is reloaded while the modal is open was challenging. With iterative
 development of the component/feature, I was gradually able to reach the optimal
 solution/logic.
+
+### Synchronizing Bookmarks' Data Across Different Browser Tabs:
+
+Implementing this feature took some time since I had never done it before. There
+were different options such as using the BroadcastChannel API, local storage
+with the "storage" event, etc. However, upon searching and learning, I realized
+that using Supabase realtime updates with a Supabase channel in an effect inside
+a custom hook that can be called in a top-level, stable client component in the
+tree was a straightforward and optimal solution (See
+/app/hooks/useSyncBookmarks.ts, /app/\_components/CrossTabSessionSync.tsx, and
+/app/layout.tsx for implementation).
+
+### Synchronizing Auth Session Across Browser Tabs:
+
+This took some time to figure out. I searched the NextAuth (Auth.js)
+documentation for answers but wasn't convinced with the solutions provided by
+the library as they required me to turn huge chunks of the app into client
+components, mitigating the benefits of partial pre-rendering, SSR, SSG, etc. But
+again, with some searching and learning I was able to implement it using the
+BroadcastChannel API in a pair of top-level client components wrapped with an
+Auth.js SessionProvider.
