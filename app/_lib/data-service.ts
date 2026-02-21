@@ -1,6 +1,5 @@
 import { supabase } from "@/app/_lib/supabase";
 import { AppUser, FetchedBookmark } from "@/types/global.types";
-import { cacheTag } from "next/cache";
 
 export async function getUser(email: string): Promise<AppUser> {
   const { data } = await supabase
@@ -15,9 +14,6 @@ export async function getUser(email: string): Promise<AppUser> {
 }
 
 export async function getBookmark(id: number): Promise<FetchedBookmark> {
-  "use cache";
-  cacheTag(`bookmark-${id}`);
-
   const { data, error } = await supabase
     .from("bookmarks")
     .select("*")
@@ -29,9 +25,6 @@ export async function getBookmark(id: number): Promise<FetchedBookmark> {
 }
 
 export async function getBookmarks(userId: number): Promise<FetchedBookmark[]> {
-  "use cache";
-  cacheTag(`${userId}-bookmarks`);
-
   const { data, error } = await supabase
     .from("bookmarks")
     .select("*")
