@@ -16,7 +16,9 @@ export default function BookmarksList({
   const [optimisticBookmarks, optimisticDelete] = useOptimistic(
     bookmarks,
     (currentBookmarks, bookmarkId) =>
-      currentBookmarks.filter((bookmark) => bookmark.id !== bookmarkId),
+      currentBookmarks.length === 1
+        ? []
+        : currentBookmarks.filter((bookmark) => bookmark.id !== bookmarkId),
   );
 
   async function handleDelete(bookmarkId: number) {
