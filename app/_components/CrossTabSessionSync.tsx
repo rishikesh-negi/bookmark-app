@@ -19,10 +19,8 @@ export default function CrossTabSessionSync() {
       if (
         e.data.sessionStatus === "authenticated" ||
         e.data.sessionStatus === "unauthenticated"
-      ) {
-        console.log(e.data.sessionStatus);
+      )
         router.refresh();
-      }
     };
   }, [router, session]);
 
