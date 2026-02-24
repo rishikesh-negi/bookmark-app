@@ -49,11 +49,11 @@ export default function EditBookmarkForm({
             <AppToast
               isVisible={t.visible}
               type="success"
-              message={message || "Bookmark successfully edited"}
+              message={message || "Bookmark successfully edited!"}
               toastId={t.id}
             />
           ),
-          { duration: 5000, id: APP_TOAST_ID },
+          { duration: 3000, id: APP_TOAST_ID },
         );
         setModalIsOpen(false);
         return { status, message, bookmark };
@@ -69,7 +69,7 @@ export default function EditBookmarkForm({
               toastId={t.id}
             />
           ),
-          { duration: 5000, id: APP_TOAST_ID },
+          { duration: 3000, id: APP_TOAST_ID },
         );
       }
 
