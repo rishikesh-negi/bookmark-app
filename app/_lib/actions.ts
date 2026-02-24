@@ -2,7 +2,6 @@
 
 import { FetchedBookmark } from "@/types/global.types";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import validator from "validator";
 import { getBookmark } from "./data-service";
 import { supabaseServerClient } from "./supabase/server";
@@ -13,7 +12,7 @@ export interface FormState {
 }
 
 export interface EditBookmarkFormState extends FormState {
-  bookmark: FetchedBookmark;
+  bookmark?: FetchedBookmark;
 }
 
 const urlValidationOptions = {
@@ -125,7 +124,7 @@ export async function editBookmarkAction(
       bookmark: prevState.bookmark,
     };
 
-  const { error } = await supabase
+  const { data: bookmark, error } = await supabase
     .from("bookmarks")
     .update({ title, url })
     .eq("id", prevState.bookmark.id)
@@ -140,6 +139,11 @@ export async function editBookmarkAction(
     };
 
   revalidatePath("/account/bookmarks");
+  return {
+    status: "success",
+    message: "Bookmark successfully edited!",
+    bookmark,
+  };
 }
 
 export async function deleteBookmark(id: number) {
