@@ -140,7 +140,6 @@ export async function editBookmarkAction(
     };
 
   revalidatePath("/account/bookmarks");
-  return redirect("/account/bookmarks");
 }
 
 export async function deleteBookmark(id: number) {
