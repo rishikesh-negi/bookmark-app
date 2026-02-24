@@ -1,7 +1,7 @@
 import icon from "@/public/favicon.png";
-import { FetchedBookmark } from "@/types/global.types";
+import { type FetchedBookmark } from "@/types/global.types";
 import { Copy, Edit, Launch, TrashCan } from "@carbon/icons-react";
-import Image, { StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { APP_TOAST_ID } from "../_lib/helpers";

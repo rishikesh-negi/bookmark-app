@@ -1,13 +1,13 @@
 import { use } from "react";
-import { auth } from "../_lib/auth";
+import { getSessionUser } from "../_lib/actions";
 import Button from "./ui/Button";
 
 export default function HeroCta() {
-  const session = use(auth());
+  const user = use(getSessionUser());
 
   return (
     <div className="flex items-center gap-4 w-max">
-      {session?.user ? (
+      {user ? (
         <>
           <span className="text-2xl text-brand-800 tracking-tight">
             Easily manage your bookmarks

@@ -1,11 +1,11 @@
 "use client";
 
-import { FetchedBookmark } from "@/types/global.types";
+import { type FetchedBookmark } from "@/types/global.types";
 import {
-  MouseEventHandler,
-  ReactElement,
   useTransition,
   type ComponentPropsWithoutRef,
+  type MouseEventHandler,
+  type ReactElement,
 } from "react";
 import SpinnerMini from "./SpinnerMini";
 

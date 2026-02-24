@@ -1,21 +1,20 @@
-import { auth } from "@/app/_lib/auth";
 import Image from "next/image";
-import { use } from "react";
 
-import Button from "@/app/_components/ui/Button";
 import UserProfileInfo from "@/app/_components/UserProfileInfo";
+import { useUserDataOnServer } from "@/app/hooks/useUserDataOnServer";
 import logo from "@/public/logo.png";
-import { redirect } from "next/navigation";
 import { type Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Account",
 };
 
 export default function Page() {
-  const session = use(auth());
-  if (!session) return redirect("/login");
-  const firstName = session?.user?.name?.split(" ")[0];
+  const user = useUserDataOnServer();
+  if (!user) redirect("/login");
+
+  const firstName = user.user_metadata.name?.split(" ")[0];
 
   return (
     <div className="grid h-full">
@@ -36,11 +35,7 @@ export default function Page() {
             to enhance your browsing experience
           </span>
         </h2>
-        {session?.user ? (
-          <UserProfileInfo />
-        ) : (
-          <Button href="/login">Log in / Sign up</Button>
-        )}
+        <UserProfileInfo />
       </div>
     </div>
   );

@@ -1,6 +1,9 @@
-import { auth } from "@/app/_lib/auth";
+import { type NextRequest } from "next/server";
+import { updateSession } from "./app/_lib/supabase/proxy";
 
-export const proxy = auth;
+export async function proxy(request: NextRequest) {
+  return await updateSession(request);
+}
 
 export const config = {
   matcher: ["/account"],

@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import { supabase } from "../_lib/supabase";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { supabase } from "../_lib/supabase/client";
 
-export function useSyncBookmarks() {
+export function useSyncBookmarksState() {
   const router = useRouter();
 
   useEffect(() => {

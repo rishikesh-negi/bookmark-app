@@ -1,12 +1,11 @@
 "use server";
 
-import { auth, SessionWithUserId, signIn, signOut } from "@/app/_lib/auth";
-import { supabase } from "@/app/_lib/supabase";
 import { FetchedBookmark } from "@/types/global.types";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import validator from "validator";
 import { getBookmark } from "./data-service";
+import { supabaseServerClient } from "./supabase/server";
 
 export interface FormState {
   status: "idle" | "success" | "error" | "fail";
@@ -26,22 +25,42 @@ const urlValidationOptions = {
   allow_protocol_relative_urls: false,
 };
 
+export async function getSessionUser() {
+  const supabase = await supabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  return user;
+}
+
+/*
 export async function signInAction() {
-  await signIn("google", { redirectTo: "/" });
+  const supabase = await supabaseServerClient();
+  const { data } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: "http://localhost:3000/auth/callback" },
+  });
+
+  if (data.url) redirect(data.url);
 }
 
 export async function signOutAction() {
-  await signOut({
-    redirectTo: "/",
-  });
+  const supabase = await supabaseServerClient();
+  const { error } = await supabase.auth.signOut();
+  if (!error) console.error(error);
 }
+*/
 
 export async function createBookmarkAction(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  const session = (await auth()) as SessionWithUserId;
-  if (!session?.user)
+  const supabase = await supabaseServerClient();
+  const user = await getSessionUser();
+  if (!user)
     return {
       status: "fail",
       message: "Only authenticated users can create a bookmark",
@@ -60,7 +79,8 @@ export async function createBookmarkAction(
 
   const { error } = await supabase
     .from("bookmarks")
-    .insert([{ title, url, user: session.user.userId }]);
+    .insert([{ title, url, owner: user.id }]);
+  console.log(error);
   if (error) return { status: "fail", message: "Failed to create bookmark" };
 
   revalidatePath("/account/bookmarks");
@@ -71,9 +91,10 @@ export async function editBookmarkAction(
   prevState: EditBookmarkFormState,
   formData: FormData,
 ): Promise<EditBookmarkFormState> {
-  const session = (await auth()) as SessionWithUserId;
+  const supabase = await supabaseServerClient();
+  const user = await getSessionUser();
 
-  if (!session?.user)
+  if (!user)
     return {
       status: "fail",
       message: "Only authenticated users can edit a bookmark",
@@ -123,14 +144,14 @@ export async function editBookmarkAction(
 }
 
 export async function deleteBookmark(id: number) {
-  const session = (await auth()) as SessionWithUserId;
-  if (!session) throw new Error("You must be logged in to perform this action");
+  const supabase = await supabaseServerClient();
+  const user = await getSessionUser();
+  if (!user) throw new Error("You must be logged in to perform this action");
 
   const bookmark = await getBookmark(id);
 
   // Prevent malicious users from deleting bookmarks not belonging to their account:
-  if (session.user.userId !== bookmark.user)
-    throw new Error("Unauthorized access!");
+  if (user.id !== bookmark.owner) throw new Error("Unauthorized access!");
 
   const { error } = await supabase.from("bookmarks").delete().eq("id", id);
   if (error) throw new Error("Bookmark could not be deleted");

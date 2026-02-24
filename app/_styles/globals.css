@@ -55,6 +55,7 @@ body {
   }
 
   .spinner-mini {
+    align-self: center;
     margin: 0;
     width: 20px;
     aspect-ratio: 1;

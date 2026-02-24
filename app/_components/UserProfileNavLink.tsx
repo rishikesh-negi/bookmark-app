@@ -1,13 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { auth } from "../_lib/auth";
+import { useUserDataOnServer } from "../hooks/useUserDataOnServer";
 import Button from "./ui/Button";
-import { use } from "react";
 
 export default function UserProfileNavLink() {
-  const session = use(auth());
+  const user = useUserDataOnServer();
 
-  if (!session)
+  if (!user)
     return (
       <Button href="/account" textOnly>
         Log in/Sign up
@@ -22,11 +21,11 @@ export default function UserProfileNavLink() {
         width={32}
         height={32}
         className="h-8 rounded-full"
-        src={session?.user?.image as string}
+        src={user.user_metadata.avatar_url as string}
         alt="User's avatar"
         referrerPolicy="no-referrer"
       />
-      <span>{session.user!.name}</span>
+      <span>{user.user_metadata.name}</span>
     </Link>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { FetchedBookmark } from "@/types/global.types";
+import { type FetchedBookmark } from "@/types/global.types";
 import { useOptimistic } from "react";
 import { deleteBookmark } from "../_lib/actions";
 import AddBookmarkForm from "./AddBookmarkForm";

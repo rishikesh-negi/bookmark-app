@@ -1,11 +1,9 @@
 import "@/app/_styles/globals.css";
 import type { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
-import CrossTabSessionSync from "./_components/CrossTabSessionSync";
+import CrossTabAppStateSync from "./_components/CrossTabAppStateSync";
 import Header from "./_components/Header";
-import SessionStatusBroadcaster from "./_components/SessionStatusBroadcaster";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -32,10 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${poppins.variable} antialiased bg-slate-100 text-slate-800 min-h-dvh flex flex-col font-sans`}>
-        <SessionProvider>
-          <SessionStatusBroadcaster />
-          <CrossTabSessionSync />
-        </SessionProvider>
+        <CrossTabAppStateSync />
         <div id="modal-root"></div>
         <Header />
 

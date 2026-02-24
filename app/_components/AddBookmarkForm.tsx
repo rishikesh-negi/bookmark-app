@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  ComponentPropsWithoutRef,
-  MouseEventHandler,
+  type ComponentPropsWithoutRef,
+  type MouseEventHandler,
   useActionState,
   useRef,
   useState,

@@ -5,6 +5,8 @@ import { BookmarkFilled, UserAvatarFilled } from "@carbon/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SignOutButton from "./SignOutButton";
+import { Suspense } from "react";
+import SpinnerMini from "./ui/SpinnerMini";
 
 const navLinks = [
   {
@@ -37,7 +39,9 @@ export default function SideNavigation() {
         ))}
 
         <li className="mt-auto">
-          <SignOutButton />
+          <Suspense fallback={<SpinnerMini />}>
+            <SignOutButton />
+          </Suspense>
         </li>
       </ul>
     </nav>

@@ -1,19 +1,8 @@
-import { supabase } from "@/app/_lib/supabase";
-import { AppUser, FetchedBookmark } from "@/types/global.types";
-
-export async function getUser(email: string): Promise<AppUser> {
-  const { data } = await supabase
-    .from("users")
-    .select("*")
-    .eq("email", email)
-    .single();
-
-  // No error handling here because the inexistence of the user is handled in the signIn auth callback
-
-  return data;
-}
+import { FetchedBookmark } from "@/types/global.types";
+import { supabaseServerClient } from "./supabase/server";
 
 export async function getBookmark(id: number): Promise<FetchedBookmark> {
+  const supabase = await supabaseServerClient();
   const { data, error } = await supabase
     .from("bookmarks")
     .select("*")
@@ -24,26 +13,13 @@ export async function getBookmark(id: number): Promise<FetchedBookmark> {
   return data;
 }
 
-export async function getBookmarks(userId: number): Promise<FetchedBookmark[]> {
+export async function getBookmarks(userId: string): Promise<FetchedBookmark[]> {
+  const supabase = await supabaseServerClient();
   const { data, error } = await supabase
     .from("bookmarks")
     .select("*")
-    .eq("user", userId);
+    .eq("owner", userId);
 
   if (error) throw new Error("Unable to fetch bookmarks");
-  return data;
-}
-
-export async function createUser(newUser: AppUser): Promise<AppUser> {
-  const { data, error } = await supabase
-    .from("users")
-    .insert([newUser])
-    .select()
-    .single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Failed to create the account");
-  }
   return data;
 }
