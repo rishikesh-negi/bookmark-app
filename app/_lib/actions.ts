@@ -35,23 +35,9 @@ export async function getSessionUser() {
   return user;
 }
 
-/*
-export async function signInAction() {
-  const supabase = await supabaseServerClient();
-  const { data } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: { redirectTo: "http://localhost:3000/auth/callback" },
-  });
-
-  if (data.url) redirect(data.url);
+export async function revalidateBookmarks() {
+  revalidatePath("/account/bookmarks");
 }
-
-export async function signOutAction() {
-  const supabase = await supabaseServerClient();
-  const { error } = await supabase.auth.signOut();
-  if (!error) console.error(error);
-}
-*/
 
 export async function createBookmarkAction(
   prevState: FormState,
