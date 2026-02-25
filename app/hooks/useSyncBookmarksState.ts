@@ -16,7 +16,7 @@ export function useSyncBookmarksState() {
           schema: "public",
           table: "bookmarks",
         },
-        () => router.refresh(),
+        () => router.push(`${location.pathname}`),
       )
       .subscribe();
 
