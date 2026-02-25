@@ -16,15 +16,9 @@ export function useSyncBookmarksState() {
           schema: "public",
           table: "bookmarks",
         },
-        (payload) => {
-          console.log(payload.eventType);
-          router.refresh();
-        },
+        () => router.refresh(),
       )
-      .subscribe((status, err) => {
-        if (err) console.error(err);
-        console.log("Supabase realtime WS status: ", status);
-      });
+      .subscribe();
 
     return () => {
       supabase.removeChannel(bookmarksChannel);
