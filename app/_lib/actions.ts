@@ -35,10 +35,6 @@ export async function getSessionUser() {
   return user;
 }
 
-export async function revalidateBookmarks() {
-  revalidatePath("/account/bookmarks");
-}
-
 export async function createBookmarkAction(
   prevState: FormState,
   formData: FormData,
