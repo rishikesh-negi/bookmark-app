@@ -1,25 +1,12 @@
-import { type AuthChangeEvent } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { supabase } from "../_lib/supabase/client";
 
-export function useSyncAppState() {
+export function useSyncBookmarksState() {
   const router = useRouter();
-  const sessionEventRef = useRef<AuthChangeEvent>("INITIAL_SESSION");
 
   useEffect(() => {
     const bookmarksChannel = supabase.channel("bookmarks-channel");
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
-        if (sessionEventRef.current !== event) {
-          sessionEventRef.current = event;
-          router.refresh();
-        }
-      }
-    });
 
     bookmarksChannel
       .on(
@@ -41,7 +28,6 @@ export function useSyncAppState() {
 
     return () => {
       supabase.removeChannel(bookmarksChannel);
-      subscription.unsubscribe();
     };
   }, [router]);
 }
