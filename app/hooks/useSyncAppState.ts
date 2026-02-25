@@ -30,9 +30,9 @@ export function useSyncAppState() {
           schema: "public",
           table: "bookmarks",
         },
-        async (payload) => {
+        (payload) => {
           console.log(payload.eventType);
-          await revalidateBookmarks();
+          revalidateBookmarks();
           router.refresh();
         },
       )
