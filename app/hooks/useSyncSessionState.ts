@@ -13,7 +13,6 @@ export default function useSyncSessionState() {
     } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
         if (sessionEventRef.current !== event) {
-          if (!document.hasFocus()) location.reload();
           sessionEventRef.current = event;
           router.refresh();
         }
