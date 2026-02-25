@@ -2,7 +2,6 @@ import { type AuthChangeEvent } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { supabase } from "../_lib/supabase/client";
-import { revalidateBookmarks } from "../_lib/actions";
 
 export function useSyncAppState() {
   const router = useRouter();
@@ -30,11 +29,7 @@ export function useSyncAppState() {
           schema: "public",
           table: "bookmarks",
         },
-        (payload) => {
-          console.log(payload.eventType);
-          revalidateBookmarks();
-          router.refresh();
-        },
+        () => router.refresh(),
       )
       .subscribe();
 
