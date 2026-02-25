@@ -1,11 +1,9 @@
 "use client";
 
-import { useSyncBookmarksState } from "../hooks/useSyncBookmarksState";
-import useSyncSessionState from "../hooks/useSyncSessionState";
+import { useSyncAppState } from "../hooks/useSyncAppState";
 
 export default function CrossTabAppStateSync() {
-  useSyncBookmarksState();
-  useSyncSessionState();
+  useSyncAppState();
 
   return null;
 }
