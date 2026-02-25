@@ -8,7 +8,6 @@ export function useSyncBookmarksState() {
   const user = useUserDataOnClient();
 
   useEffect(() => {
-    if (!user) return;
     const bookmarksChannel = supabase.channel("bookmarks-channel");
 
     bookmarksChannel
@@ -18,7 +17,7 @@ export function useSyncBookmarksState() {
           event: "*",
           schema: "public",
           table: "bookmarks",
-          filter: `owner=eq.${user.id}`,
+          filter: `owner=eq.${user?.id}`,
         },
         () => router.refresh(),
       )
