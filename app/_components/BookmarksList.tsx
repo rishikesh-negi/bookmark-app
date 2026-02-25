@@ -35,7 +35,11 @@ export default function BookmarksList({
       <ul className="flex-1 w-260 max-h-[75%] space-y-6 overflow-y-scroll custom-scrollbar pb-2">
         {optimisticBookmarks.map((bookmark) => (
           <li key={bookmark.id}>
-            <Bookmark bookmark={bookmark} onDelete={handleDelete} />
+            <Bookmark
+              bookmark={bookmark}
+              onDelete={handleDelete}
+              key={`bookmark-${bookmark.id}`}
+            />
           </li>
         ))}
       </ul>
