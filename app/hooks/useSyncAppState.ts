@@ -31,7 +31,9 @@ export function useSyncAppState() {
         },
         () => router.refresh(),
       )
-      .subscribe();
+      .subscribe((status) =>
+        console.log("Supabase realtime WS status: ", status),
+      );
 
     return () => {
       supabase.removeChannel(bookmarksChannel);
