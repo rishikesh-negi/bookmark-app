@@ -10,7 +10,11 @@ export default function useSyncSessionState() {
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "TOKEN_REFRESHED" || event === "SIGNED_IN") {
+        supabase.realtime.setAuth(session?.access_token);
+      }
+
       if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
         if (sessionEventRef.current !== event) {
           sessionEventRef.current = event;
