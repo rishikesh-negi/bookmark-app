@@ -29,11 +29,15 @@ export function useSyncAppState() {
           schema: "public",
           table: "bookmarks",
         },
-        () => router.refresh(),
+        (payload) => {
+          console.log(payload.eventType);
+          router.refresh();
+        },
       )
-      .subscribe((status) =>
-        console.log("Supabase realtime WS status: ", status),
-      );
+      .subscribe((status, err) => {
+        if (err) console.error(err);
+        console.log("Supabase realtime WS status: ", status);
+      });
 
     return () => {
       supabase.removeChannel(bookmarksChannel);
