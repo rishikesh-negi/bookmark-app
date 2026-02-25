@@ -5,7 +5,7 @@ import useSyncSessionState from "../hooks/useSyncSessionState";
 
 export default function CrossTabAppStateSync() {
   useSyncBookmarksState();
-  // useSyncSessionState();
+  useSyncSessionState();
 
   return null;
 }
