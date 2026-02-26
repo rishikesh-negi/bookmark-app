@@ -47,10 +47,10 @@ export async function createBookmarkAction(
       message: "Only authenticated users can create a bookmark",
     };
 
-  const title = formData.get("title") as string;
-  const url = formData.get("url") as string;
+  const title = (formData.get("title") as string).trim();
+  const url = (formData.get("url") as string).trim();
 
-  if (title.trim().length === 0)
+  if (title.length === 0)
     return { status: "error", message: "A bookmark must have a valid title" };
   if (!validator.isURL(url, urlValidationOptions))
     return {
@@ -89,9 +89,15 @@ export async function editBookmarkAction(
       bookmark: prevState.bookmark,
     };
 
-  const title = formData.get("title") as string;
-  const url = formData.get("url") as string;
+  const title = (formData.get("title") as string).trim();
+  const url = (formData.get("url") as string).trim();
 
+  if (title.length === 0)
+    return {
+      status: "error",
+      message: "A bookmark must have a valid title",
+      bookmark: prevState.bookmark,
+    };
   if (!validator.isURL(url, urlValidationOptions))
     return {
       status: "error",
