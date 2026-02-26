@@ -1,13 +1,17 @@
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { supabase } from "../_lib/supabase/client";
 import { useUserDataOnClient } from "./useUserDataOnClient";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 export function useSyncBookmarksState() {
+  const channelRef = useRef<RealtimeChannel>(null);
   const router = useRouter();
   const user = useUserDataOnClient();
 
   useEffect(() => {
+    if (!user || channelRef.current) return;
+
     const bookmarksChannel = supabase
       .channel("bookmarks-channel")
       .on(
@@ -21,6 +25,8 @@ export function useSyncBookmarksState() {
         () => router.refresh(),
       )
       .subscribe();
+
+    channelRef.current = bookmarksChannel;
 
     return () => {
       supabase.removeChannel(bookmarksChannel);
