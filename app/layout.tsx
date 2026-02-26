@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import CrossTabAppStateSync from "./_components/CrossTabAppStateSync";
 import Header from "./_components/Header";
+import { Suspense } from "react";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -30,7 +31,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${poppins.variable} antialiased bg-slate-100 text-slate-800 min-h-dvh flex flex-col font-sans`}>
-        <CrossTabAppStateSync />
+        <Suspense>
+          <CrossTabAppStateSync />
+        </Suspense>
         <div id="modal-root"></div>
         <Header />
 
