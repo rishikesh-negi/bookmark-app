@@ -2,7 +2,7 @@ import "@/app/_styles/globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
-import CrossTabAppStateSync from "./_components/CrossTabAppStateSync";
+import CrossTabSessionSync from "./_components/CrossTabSessionSync";
 import Header from "./_components/Header";
 import { Suspense } from "react";
 
@@ -32,7 +32,7 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} antialiased bg-slate-100 text-slate-800 min-h-dvh flex flex-col font-sans`}>
         <Suspense>
-          <CrossTabAppStateSync />
+          <CrossTabSessionSync />
         </Suspense>
         <div id="modal-root"></div>
         <Header />
