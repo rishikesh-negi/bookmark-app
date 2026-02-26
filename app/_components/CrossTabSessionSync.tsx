@@ -1,6 +1,6 @@
 "use client";
 
-import useSyncSessionState from "../hooks/useSyncSessionState";
+import { useSyncSessionState } from "../hooks/useSyncSessionState";
 
 export default function CrossTabSessionSync() {
   useSyncSessionState();

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { supabase } from "@/app/_lib/supabase/client";
 
-export default function useSyncSessionState() {
+export function useSyncSessionState() {
   const router = useRouter();
   const sessionEventRef = useRef<AuthChangeEvent>("INITIAL_SESSION");
 
