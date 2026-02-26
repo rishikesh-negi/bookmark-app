@@ -6,51 +6,100 @@ Application link: [Bookmark App](https://getmybookmarks.vercel.app).
 
 ## Prerequisites for running the application locally:
 
-- A Supabase backend with the following tables (assume each table has an 'id'
-  and 'created_at' column by default):
+- A Supabase backend with the following tables:
 
-```javascript
-users: {
+```postgres
+-- The following is not the code to create the tables; just the definition of the tables and their columns:
+users:
+  id: UUID; (first delete the existing int8-type "id" column)
+  created_at: timestamptz; (exists by default)
   fullName: text;
   email: text;
-}
 
-bookmarks: {
+bookmarks:
+  id: int8; (exists by default)
+  created_at: timestamptz; (exists by default)
   title: text;
   url: text;
   user: int8 (foreign key to the 'users' table)
-}
 ```
 
-- Forked and cloned repository to run locally
+- A database trigger to add a new user to the public.users table on first login:
+
+```sql
+create or replace function public.handle_new_user () returns trigger as $$
+begin
+  insert into public.users (id, created_at, "fullName", email)
+  values (
+    new.id,
+    new.created_at,
+    new.raw_user_meta_data->>'full_name',
+    new.email
+  );
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists on_auth_user_created on auth.users;
+
+create trigger on_auth_user_created
+after insert on auth.users for each row
+execute procedure public.handle_new_user ();
+```
+
+- "REPLICA IDENTITY" set to "full" on the "bookmarks" table:
+
+```sql
+alter table bookmarks REPLICA IDENTITY full;
+```
+
+- Supabase Realtime enabled on the "bookmarks" table.
+
+- A Permissive RLS policy for each type of DB operation on the "bookmarks" table
+  with `(auth.uid() = owner)` as the check expression and "authenticated"
+  selected as the target role.
+
+- SELECT, UPDATE, and DELETE RLS policies on the "public"."users" table with the
+  check expression `(auth.uid() = id)`.
+
+- Google enabled as the auth provider on the Supabase project with the required
+  credentials correctly added (Supabase Dashboard -> Authentication -> Sign In /
+  Providers).
+
+- [Supabase Auth for Next.js](https://supabase.com/docs/guides/auth/quickstarts/nextjs)
+
+- [Supabase Client for SSR](https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs)
+
+- [Google Cloud Console project with a correctly configured client for OAuth](https://console.cloud.google.com/apis/dashboard)
+
+- [Google OAuth with Supabase Auth](https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=framework&framework=nextjs)
+
+- In Supabase Dashboard -> Authentication -> URL Configuration, add the
+  following:
+  - `Site URL` set to `http://localhost:300` during development, and to the
+    production URL later during production.
+  - Redirect URLs: `http://localhost:3000/auth/callback` and
+    `https://<your deployment domain>/auth/callback`. Add **both**.
+
+- Forked and cloned repository to run the project locally
 
 - A .env.local file in the project's root folder containing the following
   environment variables:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=<Your Supabase project URL>
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<Your Supabase project's publishable public key>
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<Supabase project`s publishable key>
 
-NEXTAUTH_URL=http://localhost:3000 (to be changed to the URL of the deployed project on Vercel)
-NEXTAUTH_SECRET=<Any secure string that can serve as a secret>
-
-AUTH_GOOGLE_ID=<Your Google Dev Console project client ID>
-AUTH_GOOGLE_SECRET=<Your Google Dev Console project client secret>
+AUTH_GOOGLE_ID=<Your Google Dev Console project`s client ID>
+SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=<Your Google Dev Console project`s client secret>
 ```
 
-- A Google Developer Console project with correct configurations to use Google
-  as the auth provider
-
-- Install all the packages by running the following command in the project root
-  directory:
-
-```bash
-npm install
-```
+- Install all the packages by running `npm install` in the following command in
+  the project's root directory.
 
 ## Getting Started
 
-First, run the development server:
+Run the development server:
 
 ```bash
 npm run dev
@@ -65,68 +114,87 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 result.
 
-You can start editing the page by modifying `app/page.tsx`. The page
-auto-updates as you edit the file.
-
 Test the production build of the project by runing:
 
 ```bash
 npm run prod:pseudo
 ```
 
-## Challenge/s Faced:
+## Challenge/s Faced During Implementation:
 
 ### TypeScript Integration:
 
 Using strict TypeScript lengthened the duration of the development process. It
-also made development more complex by enforcing the use of correct types in
-components, functions, hooks, etc. Although intimidating at first, with some
-searching and learning, it became achievable.
+also made development more complex through enforcement of correct types in
+components, functions, hooks, server actions, form actions, etc. However, it
+made the project less susceptible to production bugs by catching them at compile
+time. Although intimidating at first, with some searching and learning, it
+became achievable.
 
-### Setting Up Google sign-in Using Auth.js:
+### Setting Up Supabase Auth with Google OAuth:
 
-Auth.js was a no-brainer choice for implementing authentication with Google
-sign-in. However, because Auth.js was previously known as NextAuth, then
-acquired by BetterAuth, who turned it into Auth.js, it has different versions of
-documentation. Figuring out the ideal version to use and the documentation to
-refer was messy. Learning about how to use Google Developer Console to create an
-auth provider client for Google sign-in was another challenge. But I was able to
-figure everything out by reading about how to set up a NextAuth/BetterAuth
-authentication flow with Google.
-
-### Flexible Components:
-
-Building flexible components with the required props combinations with
-TypeScript was challenging. I used discriminated unions with type narrowing to
-implement truly flexible components. Example: A button component that can either
-be a <button> or a Next.js <Link /> component depending on the passed props.
+Having implemented OAuth using NextAuth (Auth.js) in my previous projects, I had
+no experience setting up Supabase Auth with Google as the provider. But I was
+able to implement it by reading the Supabase Auth documentation.
 
 ### Forms in Modals:
 
 Creating a wrapper modal component to open forms in a modal was challenging and
-required a lot of logical thinking. Figuring out the logic to add the modal to
-the body only when it is opened and to remove the modal from the DOM when the
-page is reloaded while the modal is open was challenging. With iterative
-development of the component/feature, I was gradually able to reach the optimal
-solution/logic.
+required some logical thinking. Figuring out the logic to add the modal to the
+document body only when it is opened, and to remove it from the DOM when it is
+closed or the page is reloaded was challenging. With iterative development of
+the component/feature, I was gradually able to reach the optimal solution, which
+involved using the modal state in an effect and exposing the state setter
+function as API using a context and a custom useModal hook.
 
-### Synchronizing Bookmarks' Data Across Different Browser Tabs:
+### Synchronizing Bookmarks Across Different Browser Tabs:
 
-Implementing this feature took some time since I had never done it before. There
-were different options such as using the BroadcastChannel API, local storage
-with the "storage" event, etc. However, upon searching and learning, I realized
-that using Supabase realtime updates with a Supabase channel in an effect inside
-a custom hook that can be called in a top-level, stable client component in the
-tree was a straightforward and optimal solution (See
-/app/hooks/useSyncBookmarks.ts, /app/\_components/CrossTabSessionSync.tsx, and
-/app/layout.tsx for implementation).
+Implementing this feature was time-intensive, since I had never done it before.
+There were different options, such as using the BroadcastChannel API, local
+storage with the "storage" event, etc.
+
+Upon searching and learning, I discovered that using a Supabase Realtime channel
+to listen to "postgres_changes" in an effect inside a custom hook that can be
+called in a JSX-less client component on the bookmarks page was a
+straightforward and optimal solution.
+
+At first it didn't work because the "REPLICA IDENTITY" of the "bookmarks" table
+was set to "DEFAULT", which meant that Postgres was only including the primary
+key (id column) of the bookmark in the replication events. After setting REPLICA
+IDENTITY to "full", it started working in development. Later, I discovered that
+even though the bookmarks were synced across browser tabs in development, that
+was not the case in production. The tabs that opened later were not updating the
+bookmarks after data change.
+
+This was a production bug that occurred because I was not checking for the
+existence of a session or an already created channel before creating the channel
+in the effect. As a result, either the channel was being dropped due to the
+WebSocket not finding an access token, or a new channel was being created for
+each new tab, resulting in the tabs not receiving the event from the correct
+channel.
+
+To solve this, I created a custom hook to access the session user's data and a
+ref to keep a track of an already existing channel. The effect now creates a
+channel only when the session exists and no existing channel is found. As a
+result, the corresponding WebSockets now get a valid access token, they listen
+for events on the same channel, and the bookmarks are synchronized across tabs.
+
+See the **@/app/hooks/useSyncBookmarksState.ts**,
+**@/app/\_components/CrossTabBookmarksSync.tsx**, and
+**@/app/account/bookmarks/page.tsx** files for implementation.
 
 ### Synchronizing Auth Session Across Browser Tabs:
 
-This took some time to figure out. I searched the NextAuth (Auth.js)
-documentation for answers but wasn't convinced with the solutions provided by
-the library as they required me to turn huge chunks of the app into client
-components, mitigating the benefits of partial pre-rendering, SSR, SSG, etc. But
-again, with some searching and learning I was able to implement it using the
-BroadcastChannel API in a pair of top-level client components wrapped with an
-Auth.js SessionProvider.
+Figuring out how to sync session state across tabs to simultaneously log the
+user in or out in all tabs took some time.
+
+After some experimentation and reading, I discovered that handling
+authentication on the client and using the `.auth.onAuthStateChange()` method on
+the Supabase browser client allows for listening to auth events across all tabs
+via a dedicated WebSocket. So, I used a ref to detect session state changes
+whenever a "SIGNED_IN" or "SIGNED_OUT" event occurred by comparing the current
+ref value with the new auth event, and called `router.refresh()` whenever the
+state changed, which made the user log in or out of the application in all tabs
+even if the action happened in one tab.
+
+See the **@/app/hooks/useSyncSessionState.ts** file for implementation.
