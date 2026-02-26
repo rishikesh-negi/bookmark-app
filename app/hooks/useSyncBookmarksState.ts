@@ -30,6 +30,7 @@ export function useSyncBookmarksState() {
 
     return () => {
       supabase.removeChannel(bookmarksChannel);
+      channelRef.current = null;
     };
   }, [router, user]);
 }
