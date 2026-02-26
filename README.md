@@ -9,7 +9,9 @@ Application link: [Bookmark App](https://getmybookmarks.vercel.app).
 1. A Supabase backend with the following tables:
 
 ```postgres
--- The following is not the code to create the tables; just the definition of the tables and their columns:
+-- The following is not the code to create the tables;
+-- just the definition of the tables and their columns:
+
 users:
   id: UUID; (first delete the existing int8-type "id" column)
   created_at: timestamptz; (exists by default)
