@@ -6,7 +6,7 @@ Application link: [Bookmark App](https://getmybookmarks.vercel.app).
 
 ## Prerequisites for running the application locally:
 
-- A Supabase backend with the following tables:
+1. A Supabase backend with the following tables:
 
 ```postgres
 -- The following is not the code to create the tables; just the definition of the tables and their columns:
@@ -24,7 +24,8 @@ bookmarks:
   user: int8 (foreign key to the 'users' table)
 ```
 
-- A database trigger to add a new user to the public.users table on first login:
+2. A database trigger to add a new user to the public.users table on first
+   login:
 
 ```sql
 create or replace function public.handle_new_user () returns trigger as $$
@@ -47,44 +48,44 @@ after insert on auth.users for each row
 execute procedure public.handle_new_user ();
 ```
 
-- "REPLICA IDENTITY" set to "full" on the "bookmarks" table:
+3.  "REPLICA IDENTITY" set to "full" on the "bookmarks" table:
 
 ```sql
 alter table bookmarks REPLICA IDENTITY full;
 ```
 
-- Supabase Realtime enabled on the "bookmarks" table.
+4. Supabase Realtime enabled on the "bookmarks" table.
 
-- A Permissive RLS policy for each type of DB operation on the "bookmarks" table
-  with `(auth.uid() = owner)` as the check expression and "authenticated"
-  selected as the target role.
+5. A Permissive RLS policy for each type of DB operation on the "bookmarks"
+   table with `(auth.uid() = owner)` as the check expression and "authenticated"
+   selected as the target role.
 
-- SELECT, UPDATE, and DELETE RLS policies on the "public"."users" table with the
-  check expression `(auth.uid() = id)`.
+6. SELECT, UPDATE, and DELETE RLS policies on the "public"."users" table with
+   the check expression `(auth.uid() = id)`.
 
-- Google enabled as the auth provider on the Supabase project with the required
-  credentials correctly added (Supabase Dashboard -> Authentication -> Sign In /
-  Providers).
+7. Google enabled as the auth provider on the Supabase project with the required
+   credentials correctly added (Supabase Dashboard -> Authentication -> Sign In
+   / Providers).
 
-- [Supabase Auth for Next.js](https://supabase.com/docs/guides/auth/quickstarts/nextjs)
+8. [Supabase Auth for Next.js](https://supabase.com/docs/guides/auth/quickstarts/nextjs)
 
-- [Supabase Client for SSR](https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs)
+9. [Supabase Client for SSR](https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs)
 
-- [Google Cloud Console project with a correctly configured client for OAuth](https://console.cloud.google.com/apis/dashboard)
+10. [Google Cloud Console project with a correctly configured client for OAuth](https://console.cloud.google.com/apis/dashboard)
 
-- [Google OAuth with Supabase Auth](https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=framework&framework=nextjs)
+11. [Google OAuth with Supabase Auth](https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=framework&framework=nextjs)
 
-- In Supabase Dashboard -> Authentication -> URL Configuration, add the
-  following:
-  - `Site URL` set to `http://localhost:300` during development, and to the
-    production URL later during production.
-  - Redirect URLs: `http://localhost:3000/auth/callback` and
-    `https://<your deployment domain>/auth/callback`. Add **both**.
+12. In Supabase Dashboard -> Authentication -> URL Configuration, add the
+    following:
+    - `Site URL` set to `http://localhost:300` during development, and to the
+      production URL later during production.
+    - Redirect URLs: `http://localhost:3000/auth/callback` and
+      `https://<your deployment domain>/auth/callback`. Add **both**.
 
-- Forked and cloned repository to run the project locally
+13. Forked and cloned repository to run the project locally
 
-- A .env.local file in the project's root folder containing the following
-  environment variables:
+14. A .env.local file in the project's root folder containing the following
+    environment variables:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=<Your Supabase project URL>
@@ -94,8 +95,8 @@ AUTH_GOOGLE_ID=<Your Google Dev Console project`s client ID>
 SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=<Your Google Dev Console project`s client secret>
 ```
 
-- Install all the packages by running `npm install` in the following command in
-  the project's root directory.
+15. Install all the packages by running `npm install` in the following command
+    in the project's root directory.
 
 ## Getting Started
 
