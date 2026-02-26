@@ -61,7 +61,6 @@ export async function createBookmarkAction(
   const { error } = await supabase
     .from("bookmarks")
     .insert([{ title, url, owner: user.id }]);
-  console.log(error);
   if (error) return { status: "fail", message: "Failed to create bookmark" };
 
   revalidatePath("/account/bookmarks");
