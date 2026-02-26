@@ -4,7 +4,6 @@ import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import CrossTabSessionSync from "./_components/CrossTabSessionSync";
 import Header from "./_components/Header";
-import { Suspense } from "react";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
