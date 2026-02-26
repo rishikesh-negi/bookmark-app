@@ -31,9 +31,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${poppins.variable} antialiased bg-slate-100 text-slate-800 min-h-dvh flex flex-col font-sans`}>
-        <Suspense>
-          <CrossTabSessionSync />
-        </Suspense>
+        <CrossTabSessionSync />
         <div id="modal-root"></div>
         <Header />
 
